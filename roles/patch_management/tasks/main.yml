@@ -1,0 +1,44 @@
+---
+# Aufgaben für automatisches Patch-Management (Unattended Upgrades)
+
+- name: Unattended-upgrades Paket installieren
+  apt:
+    name: unattended-upgrades
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Konfiguration für automatische Updates setzen (20auto-upgrades)
+  copy:
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "{{ unattended_automatic_upgrades }}";
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Erweiterte Konfiguration für Unattended-Upgrades anpassen (50unattended-upgrades)
+  template:
+    # Alternativ als copy oder mit Parametern, hier als robuster Block:
+    dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    content: |
+      Unattended-Upgrade::Allowed-Origins {
+          "Ubuntu,archive=${distro_codename}-security";
+      };
+      Unattended-Upgrade::AutoFixInterruptedDpkg "true";
+      Unattended-Upgrade::MinimalSteps "true";
+      Unattended-Upgrade::InstallOnShutdown "false";
+      Unattended-Upgrade::Mail "{{ unattended_mail }}";
+      Unattended-Upgrade::Automatic-Reboot "{{ 'true' if unattended_automatic_reboot else 'false' }}";
+      Unattended-Upgrade::Automatic-Reboot-Time "{{ unattended_automatic_reboot_time }}";
+    owner: root
+    group: root
+    mode: '0644'
+  when: unattended_mail != "" or unattended_automatic_reboot is defined
+
+- name: Unattended-upgrades Dienst aktivieren
+  systemd:
+    name: unattended-upgrades
+    state: started
+    enabled: yes

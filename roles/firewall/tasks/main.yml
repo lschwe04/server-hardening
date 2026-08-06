@@ -1,0 +1,30 @@
+---
+# Aufgaben für die UFW-Firewall-Konfiguration
+
+- name: UFW (Uncomplicated Firewall) installieren
+  apt:
+    name: ufw
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: UFW Standard-Policy für eingehenden Traffic setzen (Deny)
+  ufw:
+    direction: incoming
+    policy: "{{ ufw_default_incoming }}"
+
+- name: UFW Standard-Policy für ausgehenden Traffic setzen (Allow)
+  ufw:
+    direction: outgoing
+    policy: "{{ ufw_default_outgoing }}"
+
+- name: Erlaubte Ports freigeben
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  loop: "{{ ufw_allowed_ports }}"
+
+- name: UFW aktivieren und beim Systemstart starten
+  ufw:
+    state: enabled

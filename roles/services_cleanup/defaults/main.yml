@@ -1,0 +1,12 @@
+---
+# Standard-Variablen für Services Cleanup (Attack Surface Reduction)
+
+# Liste von Paketen, die vom System entfernt werden sollen, falls sie vorhanden sind
+unwanted_packages:
+  - telnet
+  - rsh-client
+  - rsh-redon
+  - tftp
+  - nis
+  - avahi-daemon
+  - cups

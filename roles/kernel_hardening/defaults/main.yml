@@ -1,0 +1,18 @@
+---
+# Standard-Variablen für Kernel-Hardening (Sysctl)
+
+# IP-Spoofing und Routing absichern
+kernel_accept_source_route: 0
+kernel_accept_redirects: 0
+kernel_secure_redirects: 0
+kernel_send_redirects: 0
+kernel_rp_filter: 1
+
+# Netzwerk-Attacken abwehren (SYN-Floods)
+kernel_tcp_syncookies: 1
+
+# Kernel-Logs schützen
+kernel_dmesg_restrict: 1
+
+# Core Dumps für suid-Prozesse deaktivieren
+kernel_suid_dumpable: 0

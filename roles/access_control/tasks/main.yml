@@ -1,0 +1,31 @@
+---
+# Aufgaben für das Access Control und SSH Hardening
+
+- name: SSH-Konfiguration härten (sshd_config anpassen)
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: /usr/sbin/sshd -t -f %s
+  loop:
+    - { regexp: '^#?PermitRootLogin', line: 'PermitRootLogin {{ ssh_permit_root_login }}' }
+    - { regexp: '^#?PasswordAuthentication', line: 'PasswordAuthentication {{ ssh_password_authentication }}' }
+    - { regexp: '^#?PubkeyAuthentication', line: 'PubkeyAuthentication {{ ssh_pubkey_authentication }}' }
+    - { regexp: '^#?X11Forwarding', line: 'X11Forwarding {{ ssh_x11_forwarding }}' }
+    - { regexp: '^#?MaxAuthTries', line: 'MaxAuthTries {{ ssh_max_auth_tries }}' }
+    - { regexp: '^#?ClientAliveInterval', line: 'ClientAliveInterval {{ ssh_client_alive_interval }}' }
+    - { regexp: '^#?ClientAliveCountMax', line: 'ClientAliveCountMax {{ ssh_client_alive_count_max }}' }
+    - { regexp: '^#?Port', line: 'Port {{ ssh_port }}' }
+  notify: Restart SSH
+
+- name: Passwort-Richtlinien in /etc/login.defs anpassen
+  lineinfile:
+    path: /etc/login.defs
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  loop:
+    - { regexp: '^PASS_MAX_DAYS', line: 'PASS_MAX_DAYS   {{ password_max_days }}' }
+    - { regexp: '^PASS_MIN_DAYS', line: 'PASS_MIN_DAYS   {{ password_min_days }}' }
+    - { regexp: '^PASS_WARN_AGE', line: 'PASS_WARN_AGE   {{ password_warning_days }}' }

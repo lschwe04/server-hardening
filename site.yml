@@ -1,0 +1,15 @@
+---
+# Zentrales Ansible Playbook für Linux Server Hardening
+
+- name: Server absichern und härten
+  hosts: servers
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: access_control
+    - role: firewall
+    - role: intrusion_prevention
+    - role: kernel_hardening
+    - role: patch_management
+    - role: services_cleanup

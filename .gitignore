@@ -1,0 +1,23 @@
+# Ansible temporäre Dateien und Sockets
+.ansible/
+*.retry
+*.log
+
+# Lokale Inventories oder sensible Zugangsdaten (falls vorhanden)
+inventory/hosts.ini
+inventory/group_vars/*/*.vault
+*.key
+
+# Python / Virtual Environments (falls du venv nutzt)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# IDEs (Visual Studio Code, PyCharm etc.)
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store

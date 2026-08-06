@@ -1,0 +1,37 @@
+---
+# Aufgaben für Services Cleanup und Attack Surface Reduction
+
+- name: Ungenutzte und unsichere Pakete deinstallieren
+  apt:
+    name: "{{ unwanted_packages }}"
+    state: absent
+    purge: yes
+  when: ansible_os_family == "Debian"
+
+- name: Kritische Dateiberechtigungen für /etc/shadow setzen
+  file:
+    path: /etc/shadow
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Kritische Dateiberechtigungen für /etc/gshadow setzen
+  file:
+    path: /etc/gshadow
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Kritische Dateiberechtigungen für /etc/passwd setzen
+  file:
+    path: /etc/passwd
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Kritische Dateiberechtigungen für /etc/group setzen
+  file:
+    path: /etc/group
+    owner: root
+    group: root
+    mode: '0644'
