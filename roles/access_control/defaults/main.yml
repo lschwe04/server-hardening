@@ -2,17 +2,17 @@
 # Standard-Variablen für die access_control Rolle
 
 # SSH-Konfiguration
-ssh_port: 22
-ssh_permit_root_login: "no"
-ssh_password_authentication: "no"
-ssh_pubkey_authentication: "yes"
-ssh_x11_forwarding: "no"
-ssh_max_auth_tries: 3
-ssh_client_alive_interval: 300
-ssh_client_alive_count_max: 2
+access_control_ssh_port: 22
+access_control_ssh_permit_root_login: "no"
+access_control_ssh_password_authentication: "no"
+access_control_ssh_pubkey_authentication: "yes"
+access_control_ssh_x11_forwarding: "no"
+access_control_ssh_max_auth_tries: 3
+access_control_ssh_client_alive_interval: 300
+access_control_ssh_client_alive_count_max: 2
 
 # Erlaubte Benutzer (leer lassen oder spezifischen Admin-User angeben, z. B. ['admin'])
-ssh_allowed_users: []
+access_control_ssh_allowed_users: []
 
 # Passwörter / Login-Limits
 password_max_days: 90
