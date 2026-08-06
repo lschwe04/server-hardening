@@ -1,34 +1,29 @@
-# Linux Server Hardening mit Ansible
+Server Hardening
+Automated Linux server hardening using Ansible.
 
-Ein modulares und automatisiertes Ansible-Playbook zur Absicherung von Linux-Servern (getestet auf Ubuntu/Debian). Das Projekt folgt Best Practices für Security-Hardening, um die Angriffsfläche eines Servers signifikant zu verringern.
+Overview
+This repository contains Ansible roles and playbooks to secure and harden Linux systems. It includes automated linting via GitHub Actions to ensure code quality and compliance.
 
----
+Project Structure
 
-## 🛠️ Enthaltene Rollen & Features
-
-Das Projekt ist in folgende logische Sicherheitsmodule (`roles`) unterteilt:
-
-1. **`access_control`**: Härtung des SSH-Zugriffs (Deaktivierung von Root-Login und Passwörtern, Erzwingen von SSH-Keys, Limits für Login-Versuche) und Anpassung von `/etc/login.defs`.
-2. **`firewall`**: Konfiguration von UFW (Uncomplicated Firewall) mit strikten Standard-Policies (eingehend `deny`, ausgehend `allow`) und Freigabe essenzieller Ports.
-3. **`intrusion_prevention`**: Installation und Konfiguration von Fail2ban zum Schutz vor Brute-Force-Angriffen auf den SSH-Dienst.
-4. **`kernel_hardening`**: Absicherung des Linux-Kernels über `sysctl`-Parametrisierung (Schutz vor IP-Spoofing, SYN-Floods, ICMP-Redirects und Einschränkung von Kernel-Logs).
-5. **`patch_management`**: Automatisierte Sicherheitsupdates über `unattended-upgrades` inklusive optionalem, zeitgesteuertem Neustart bei Kernel-Updates.
-6. **`services_cleanup`**: Bereinigung unnötiger und unsicherer Altlasten-Pakete (wie Telnet, rsh, tftp) sowie Absicherung kritischer Datei-Berechtigungen (`/etc/shadow`, `/etc/passwd`, etc.).
-
----
-
-## 📂 Projektstruktur
-
-```text
-.
-├── inventory/
-│   └── hosts.ini          # Inventar-Datei (Ziele und Gruppen)
+├── .github/workflows/    # CI/CD pipelines (Ansible Lint)
 ├── roles/
-│   ├── access_control/
-│   ├── firewall/
-│   ├── intrusion_prevention/
-│   ├── kernel_hardening/
-│   ├── patch_management/
-│   └── services_cleanup/
-├── site.yml               # Zentrales Playbook
+│   ├── access_control/   # User access, password policies, and security limits
+│   └── auditd/           # Audit daemon configuration and system event auditing
 └── README.md
+
+Requirements
+Ansible >= 2.10
+
+Ansible-Lint (for local development and testing)
+
+Quick Start
+1. Clone the repository: git clone https://github.com/lschwe04/server-hardening.git
+cd server-hardening
+
+2. Run ansible-lint locally to check for syntax and style compliance: ansible-lint
+
+3. Execute the playbook: ansible-playbook -i inventory.ini playbook.yml
+
+CI/CD Pipeline
+The GitHub Actions workflow automatically runs ansible-lint on every push to the main branch to enforce FQCN usage, variable naming conventions, and proper YAML formatting.
