@@ -2,9 +2,9 @@ name: Ansible Lint
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
 
 jobs:
   lint:
@@ -16,6 +16,3 @@ jobs:
 
       - name: Run ansible-lint
         uses: ansible/ansible-lint-action@main
-        with:
-          # Optional: Falls dein Playbook woanders liegt, hier anpassen
-          # targets: "playbook.yml"
