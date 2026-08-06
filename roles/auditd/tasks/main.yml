@@ -1,0 +1,62 @@
+---
+# Aufgaben für Auditd (Advanced Logging & Monitoring)
+
+- name: Auditd und auditd-plugins installieren
+  apt:
+    name:
+      - auditd
+      - audispd-plugins
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Wichtige Audit-Regeln in /etc/audit/rules.d/audit.rules hinterlegen
+  copy:
+    dest: /etc/audit/rules.d/hardening.rules
+    content: |
+      # Alte Regeln verwerfen (Standard)
+      -D
+
+      # Buffer-Größe erhöhen
+      -b 8192
+
+      # Bei Fehlern Panik auslösen oder ignorieren (1 =printk, 2 = halt)
+      -f 1
+
+      # 1. Zeitänderungen überwachen
+      -a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change
+      -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change
+      -w /etc/localtime -p wa -k time-change
+
+      # 2. Änderungen an Benutzer- und Gruppendatenbanken überwachen
+      -w /etc/group -p wa -k identity
+      -w /etc/passwd -p wa -k identity
+      -w /etc/gshadow -p wa -k identity
+      -w /etc/shadow -p wa -k identity
+      -w /etc/security/opasswd -p wa -k identity
+
+      # 3. Netzwerk- und Firewall-Änderungen überwachen
+      -w /etc/hosts -p wa -k system-locale
+      -w /etc/network/ -p wa -k system-locale
+
+      # 4. SUID/SGID-Ausführungen überwachen (Potenzielle Privileged Escalation)
+      -a always,exit -F arch=b64 -S chmod -S chown -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod
+      -a always,exit -F arch=b32 -S chmod -S chown -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod
+
+      # 5. Root-Aktivitäten (sudo / su) protokollieren
+      -w /var/log/sudo.log -p wa -k actions
+
+      {% if auditd_immutable %}
+      # 6. Immutable-Modus (Muss am Ende stehen, sperrt Änderungen)
+      -e 2
+      {% endif %}
+    owner: root
+    group: root
+    mode: '0640'
+  notify: Restart Auditd
+
+- name: Auditd Dienst aktivieren und starten
+  service:
+    name: auditd
+    state: started
+    enabled: yes

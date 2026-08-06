@@ -8,8 +8,13 @@
 
   roles:
     - role: access_control
+    - role: user_management
+    - role: auditd
     - role: firewall
     - role: intrusion_prevention
     - role: kernel_hardening
     - role: patch_management
     - role: services_cleanup
+    - role: file_integrity
+    - role: banner
+

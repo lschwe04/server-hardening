@@ -1,0 +1,5 @@
+---
+# Standard-Variablen für Auditd
+
+# Immutable Modus (schützt Audit-Konfiguration vor Änderungen im laufenden Betrieb, erfordert Reboot zum Ändern)
+auditd_immutable: false

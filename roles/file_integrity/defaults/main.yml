@@ -1,0 +1,3 @@
+---
+# Standard-Variablen für File Integrity (AIDE)
+aide_init_on_install: true

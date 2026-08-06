@@ -1,0 +1,48 @@
+---
+# Aufgaben für User Management und Passwort-Policies
+
+- name: Globale Passwort-Limits in /etc/login.defs anpassen (PASS_MAX_DAYS)
+  lineinfile:
+    path: /etc/login.defs
+    regexp: '^PASS_MAX_DAYS'
+    line: 'PASS_MAX_DAYS   {{ pass_max_days }}'
+    state: present
+
+- name: Globale Passwort-Limits in /etc/login.defs anpassen (PASS_MIN_DAYS)
+  lineinfile:
+    path: /etc/login.defs
+    regexp: '^PASS_MIN_DAYS'
+    line: 'PASS_MIN_DAYS   {{ pass_min_days }}'
+    state: present
+
+- name: Globale Passwort-Limits in /etc/login.defs anpassen (PASS_WARN_AGE)
+  lineinfile:
+    path: /etc/login.defs
+    regexp: '^PASS_WARN_AGE'
+    line: 'PASS_WARN_AGE   {{ pass_warn_age }}'
+    state: present
+
+- name: Inaktivitäts-Timeout (TMOUT) für alle Shell-Sessions global erzwingen
+  copy:
+    dest: /etc/profile.d/autologout.sh
+    content: |
+      # Automatischen Logout nach 15 Minuten Inaktivität erzwingen
+      readonly TMOUT=900
+      export TMOUT
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Passwort-Komplexitäts-Modul (libpam-pwquality) auf Debian/Ubuntu installieren
+  apt:
+    name: libpam-pwquality
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Mindestlänge für Passwörter über PAM pwquality erzwingen
+  lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: '^#?minlen'
+    line: 'minlen = 12'
+    state: present

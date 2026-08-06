@@ -1,0 +1,7 @@
+---
+# Standard-Variablen für User Management & Password Policies
+
+pass_max_days: 90     # Maximale Gültigkeit eines Passworts in Tagen
+pass_min_days: 7      # Mindestanzahl an Tagen vor der nächsten Passwortänderung
+pass_warn_age: 14     # Warnung an den Benutzer X Tage vor Ablauf des Passworts
+inactive_lock_days: 30 # Account nach X Tagen Inaktivität automatisch sperren
