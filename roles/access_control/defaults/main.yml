@@ -15,6 +15,7 @@ access_control_ssh_client_alive_count_max: 2
 access_control_ssh_allowed_users: []
 
 # Passwörter / Login-Limits
-password_max_days: 90
-password_min_days: 7
-password_warning_days: 14
+access_control_password_max_days: 90
+access_control_password_min_days: 7
+access_control_password_warning_days: 14
+

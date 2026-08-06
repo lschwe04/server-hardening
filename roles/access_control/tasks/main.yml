@@ -2,7 +2,7 @@
 # Aufgaben für das Access Control und SSH Hardening
 
 - name: SSH-Konfiguration härten (sshd_config anpassen)
-  lineinfile:
+  ansible.builtin.lineinfile::
     path: /etc/ssh/sshd_config
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
@@ -20,7 +20,7 @@
   notify: Restart SSH
 
 - name: Passwort-Richtlinien in /etc/login.defs anpassen
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/login.defs
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
