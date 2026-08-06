@@ -1,18 +1,11 @@
 name: Ansible Lint
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push]
 
 jobs:
   lint:
-    name: Lint Ansible Playbooks
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Run ansible-lint
         uses: ansible/ansible-lint-action@main
