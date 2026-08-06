@@ -18,4 +18,3 @@ access_control_ssh_allowed_users: []
 access_control_password_max_days: 90
 access_control_password_min_days: 7
 access_control_password_warning_days: 14
-

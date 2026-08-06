@@ -2,7 +2,7 @@
 # Aufgaben für das Access Control und SSH Hardening
 
 - name: SSH-Konfiguration härten (sshd_config anpassen)
-  ansible.builtin.lineinfile::
+  ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
