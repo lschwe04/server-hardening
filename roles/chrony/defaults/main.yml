@@ -1,0 +1,6 @@
+---
+# Standard-Variablen für die Chrony-Rolle
+
+chrony_package_state: present
+chrony_service_state: started
+chrony_service_enabled: true

@@ -1,0 +1,12 @@
+---
+- name: Chrony (NTP) Paket installieren
+  ansible.builtin.apt:
+    name: chrony
+    state: "{{ chrony_package_state }}"
+    update_cache: true
+
+- name: Chrony Dienst aktivieren und starten
+  ansible.builtin.service:
+    name: chrony
+    state: "{{ chrony_service_state }}"
+    enabled: "{{ chrony_service_enabled }}"

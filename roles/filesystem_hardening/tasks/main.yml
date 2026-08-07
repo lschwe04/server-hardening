@@ -1,0 +1,36 @@
+---
+- name: Berechtigungen für /etc/passwd absichern (CIS 6.1.2)
+  ansible.builtin.file:
+    path: /etc/passwd
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Berechtigungen für /etc/shadow absichern (CIS 6.1.3)
+  ansible.builtin.file:
+    path: /etc/shadow
+    mode: '0000'
+    owner: root
+    group: root
+
+- name: Berechtigungen für /etc/group absichern (CIS 6.1.4)
+  ansible.builtin.file:
+    path: /etc/group
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Berechtigungen für /etc/gshadow absichern (CIS 6.1.5)
+  ansible.builtin.file:
+    path: /etc/gshadow
+    mode: '0000'
+    owner: root
+    group: root
+
+- name: Sticky-Bit für das /tmp Verzeichnis sicherstellen (CIS 1.1.2)
+  ansible.builtin.file:
+    path: /tmp
+    mode: "{{ filesystem_hardening_tmp_mode }}"
+    owner: root
+    group: root
+    state: directory

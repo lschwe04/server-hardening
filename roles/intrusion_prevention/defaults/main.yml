@@ -1,7 +1,7 @@
 ---
 # Standard-Variablen für Intrusion Prevention (Fail2ban)
 
-fail2ban_bantime: 3600 # Zeit in Sekunden, die eine IP gebannt wird (z. B. 1 Stunde)
-fail2ban_findtime: 600 # Zeitfenster in Sekunden, in dem die Versuche gezählt werden (10 Minuten)
-fail2ban_maxretry: 3 # Maximale Fehlversuche, bevor der Ban ausgelöst wird
-fail2ban_ssh_port: 22 # Der zu überwachende SSH-Port
+intrusion_prevention_bantime: 3600 # Zeit in Sekunden, die eine IP gebannt wird (z. B. 1 Stunde)
+intrusion_prevention_findtime: 600 # Zeitfenster in Sekunden, in dem die Versuche gezählt werden (10 Minuten)
+intrusion_prevention_maxretry: 3 # Maximale Fehlversuche, bevor der Ban ausgelöst wird
+intrusion_prevention_ssh_port: 22 # Der zu überwachende SSH-Port

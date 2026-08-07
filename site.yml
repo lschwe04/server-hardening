@@ -17,3 +17,7 @@
     - role: services_cleanup
     - role: file_integrity
     - role: banner
+    - role: apparmor
+    - role: filesystem_hardening
+    - role: chrony
+    - role: login_banner

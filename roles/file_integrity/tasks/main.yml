@@ -11,7 +11,7 @@
 - name: Prüfen ob AIDE-Datenbank bereits existiert
   ansible.builtin.stat:
     path: /var/lib/aide/aide.db
-  register: aide_db_file
+  register: file_integrity_aide_db_file
 
 - name: AIDE-Datenbank initialisieren (Kann je nach System einige Minuten dauern)
   ansible.builtin.command: aideinit

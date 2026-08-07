@@ -3,10 +3,10 @@
 
 # SSH-Konfiguration
 access_control_ssh_port: 22
-access_control_ssh_permit_root_login: "no"
-access_control_ssh_password_authentication: "no"
-access_control_ssh_pubkey_authentication: "yes"
-access_control_ssh_x11_forwarding: "no"
+access_control_ssh_permit_root_login: "false"
+access_control_ssh_password_authentication: "false"
+access_control_ssh_pubkey_authentication: "true"
+access_control_ssh_x11_forwarding: "false"
 access_control_ssh_max_auth_tries: 3
 access_control_ssh_client_alive_interval: 300
 access_control_ssh_client_alive_count_max: 2

@@ -1,0 +1,9 @@
+---
+# Standard-Variablen für das Login-Banner
+
+login_banner_text: |
+  ====================================================================
+  AUTHORIZED ACCESS ONLY
+  This system is restricted to authorized users for official business.
+  All activities are monitored and logged.
+  ====================================================================

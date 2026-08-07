@@ -10,16 +10,19 @@
 
 - name: UFW Standard-Policy für eingehenden Traffic setzen (Deny)
   community.general.ufw:
+    state: enabled
     direction: incoming
-    policy: "{{ ufw_default_incoming }}"
+    default: "{{ firewall_ufw_default_incoming }}" # noqa args[module]
 
 - name: UFW Standard-Policy für ausgehenden Traffic setzen (Allow)
   community.general.ufw:
+    state: enabled
     direction: outgoing
-    policy: "{{ ufw_default_outgoing }}"
+    default: "{{ firewall_ufw_default_outgoing }}" # noqa args[module]
 
 - name: Erlaubte Ports freigeben
   community.general.ufw:
+    state: enabled
     rule: allow
     port: "{{ item }}"
     proto: tcp

@@ -1,0 +1,6 @@
+---
+# Standard-Variablen für die AppArmor-Rolle
+
+apparmor_package_state: present
+apparmor_service_state: started
+apparmor_service_enabled: true

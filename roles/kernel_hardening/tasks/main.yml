@@ -9,18 +9,18 @@
     reload: true
     sysctl_file: /etc/sysctl.d/99-security-hardening.conf
   loop:
-    - { name: "net.ipv4.conf.all.accept_source_route", value: "{{ kernel_accept_source_route }}" }
-    - { name: "net.ipv4.conf.default.accept_source_route", value: "{{ kernel_accept_source_route }}" }
-    - { name: "net.ipv4.conf.all.accept_redirects", value: "{{ kernel_accept_redirects }}" }
-    - { name: "net.ipv4.conf.default.accept_redirects", value: "{{ kernel_accept_redirects }}" }
-    - { name: "net.ipv4.conf.all.secure_redirects", value: "{{ kernel_secure_redirects }}" }
-    - { name: "net.ipv4.conf.default.secure_redirects", value: "{{ kernel_secure_redirects }}" }
-    - { name: "net.ipv4.conf.all.send_redirects", value: "{{ kernel_send_redirects }}" }
-    - { name: "net.ipv4.conf.default.send_redirects", value: "{{ kernel_send_redirects }}" }
-    - { name: "net.ipv4.conf.all.rp_filter", value: "{{ kernel_rp_filter }}" }
-    - { name: "net.ipv4.conf.default.rp_filter", value: "{{ kernel_rp_filter }}" }
-    - { name: "net.ipv4.tcp_syncookies", value: "{{ kernel_tcp_syncookies }}" }
-    - { name: "kernel.dmesg_restrict", value: "{{ kernel_dmesg_restrict }}" }
-    - { name: "fs.suid_dumpable", value: "{{ kernel_suid_dumpable }}" }
-    - { name: "net.ipv6.conf.all.disable_ipv6", value: "{{ kernel_disable_ipv6 }}" }
-    - { name: "net.ipv6.conf.default.disable_ipv6", value: "{{ kernel_disable_ipv6 }}" }
+    - { name: "net.ipv4.conf.all.accept_source_route", value: "{{ kernel_hardening_accept_source_route }}" }
+    - { name: "net.ipv4.conf.default.accept_source_route", value: "{{ kernel_hardening_accept_source_route }}" }
+    - { name: "net.ipv4.conf.all.accept_redirects", value: "{{ kernel_hardening_accept_redirects }}" }
+    - { name: "net.ipv4.conf.default.accept_redirects", value: "{{ kernel_hardening_accept_redirects }}" }
+    - { name: "net.ipv4.conf.all.secure_redirects", value: "{{ kernel_hardening_secure_redirects }}" }
+    - { name: "net.ipv4.conf.default.secure_redirects", value: "{{ kernel_hardening_secure_redirects }}" }
+    - { name: "net.ipv4.conf.all.send_redirects", value: "{{ kernel_hardening_send_redirects }}" }
+    - { name: "net.ipv4.conf.default.send_redirects", value: "{{ kernel_hardening_send_redirects }}" }
+    - { name: "net.ipv4.conf.all.rp_filter", value: "{{ kernel_hardening_rp_filter }}" }
+    - { name: "net.ipv4.conf.default.rp_filter", value: "{{ kernel_hardening_rp_filter }}" }
+    - { name: "net.ipv4.tcp_syncookies", value: "{{ kernel_hardening_tcp_syncookies }}" }
+    - { name: "kernel.dmesg_restrict", value: "{{ kernel_hardening_dmesg_restrict }}" }
+    - { name: "fs.suid_dumpable", value: "{{ kernel_hardening_suid_dumpable }}" }
+    - { name: "net.ipv6.conf.all.disable_ipv6", value: "{{ kernel_hardening_disable_ipv6 }}" }
+    - { name: "net.ipv6.conf.default.disable_ipv6", value: "{{ kernel_hardening_disable_ipv6 }}" }

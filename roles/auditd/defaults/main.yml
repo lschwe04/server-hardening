@@ -1,5 +1,6 @@
 ---
-# Standard-Variablen für Auditd
+# Standard-Variablen für die Auditd-Rolle
 
-# Immutable Modus (schützt Audit-Konfiguration vor Änderungen im laufenden Betrieb, erfordert Reboot zum Ändern)
-auditd_immutable: false
+auditd_package_state: present
+auditd_service_state: started
+auditd_service_enabled: true

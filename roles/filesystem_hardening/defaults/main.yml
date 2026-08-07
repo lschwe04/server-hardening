@@ -1,0 +1,4 @@
+---
+# Standard-Variablen für Filesystem-Hardening
+
+filesystem_hardening_tmp_mode: '1777'

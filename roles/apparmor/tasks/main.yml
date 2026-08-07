@@ -1,0 +1,21 @@
+---
+- name: AppArmor und Profile installieren
+  ansible.builtin.apt:
+    name:
+      - apparmor
+      - apparmor-utils
+      - apparmor-profiles
+    state: "{{ apparmor_package_state }}"
+    update_cache: true
+
+- name: AppArmor Dienst aktivieren und starten
+  ansible.builtin.service:
+    name: apparmor
+    state: "{{ apparmor_service_state }}"
+    enabled: "{{ apparmor_service_enabled }}"
+
+- name: Alle AppArmor-Profile in den Enforce-Modus versetzen
+  ansible.builtin.command: aa-enforce /etc/apparmor.d/*
+  register: apparmor_enforce_result
+  changed_when: false
+  failed_when: false

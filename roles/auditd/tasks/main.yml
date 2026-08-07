@@ -1,62 +1,27 @@
 ---
-# Aufgaben für Auditd (Advanced Logging & Monitoring)
-
-- name: Auditd und auditd-plugins installieren
+- name: Auditd (Advanced Auditing) Paket installieren
   ansible.builtin.apt:
-    name:
-      - auditd
-      - audispd-plugins
-    state: present
+    name: auditd
+    state: "{{ auditd_package_state }}"
     update_cache: true
-  when: ansible_os_family == "Debian"
-
-- name: Wichtige Audit-Regeln in /etc/audit/rules.d/audit.rules hinterlegen
-  ansible.builtin.copy:
-    dest: /etc/audit/rules.d/hardening.rules
-    content: |
-      # Alte Regeln verwerfen (Standard)
-      -D
-
-      # Buffer-Größe erhöhen
-      -b 8192
-
-      # Bei Fehlern Panik auslösen oder ignorieren (1 =printk, 2 = halt)
-      -f 1
-
-      # 1. Zeitänderungen überwachen
-      -a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change
-      -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change
-      -w /etc/localtime -p wa -k time-change
-
-      # 2. Änderungen an Benutzer- und Gruppendatenbanken überwachen
-      -w /etc/group -p wa -k identity
-      -w /etc/passwd -p wa -k identity
-      -w /etc/gshadow -p wa -k identity
-      -w /etc/shadow -p wa -k identity
-      -w /etc/security/opasswd -p wa -k identity
-
-      # 3. Netzwerk- und Firewall-Änderungen überwachen
-      -w /etc/hosts -p wa -k system-locale
-      -w /etc/network/ -p wa -k system-locale
-
-      # 4. SUID/SGID-Ausführungen überwachen (Potenzielle Privileged Escalation)
-      -a always,exit -F arch=b64 -S chmod -S chown -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod
-      -a always,exit -F arch=b32 -S chmod -S chown -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod
-
-      # 5. Root-Aktivitäten (sudo / su) protokollieren
-      -w /var/log/sudo.log -p wa -k actions
-
-      {% if auditd_immutable %}
-      # 6. Immutable-Modus (Muss am Ende stehen, sperrt Änderungen)
-      -e 2
-      {% endif %}
-    owner: root
-    group: root
-    mode: "0640"
-  notify: Restart Auditd
 
 - name: Auditd Dienst aktivieren und starten
   ansible.builtin.service:
     name: auditd
-    state: started
-    enabled: true
+    state: "{{ auditd_service_state }}"
+    enabled: "{{ auditd_service_enabled }}"
+
+- name: Wichtige Systemdateien überwachen (CIS-konforme Basisregeln)
+  ansible.builtin.lineinfile:
+    path: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    create: true
+    mode: '0640'
+    owner: root
+    group: root
+  loop:
+    - "-w /etc/passwd -p wa -k identity"
+    - "-w /etc/group -p wa -k identity"
+    - "-w /etc/shadow -p wa -k identity"
+    - "-w /etc/sudoers -p wa -k scope"
+  notify: Auditd neu starten

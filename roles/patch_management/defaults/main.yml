@@ -2,17 +2,17 @@
 # Standard-Variablen für das Patch-Management
 
 # Automatische Updates aktivieren
-unattended_automatic_upgrades: 1
+patch_management_automatic_upgrades: 1
 
 # Welche Updates eingespielt werden sollen (hier: nur Sicherheitsupdates)
-unattended_origins_patterns:
+patch_management_origins_patterns:
   - "origin=Ubuntu,archive=${distro_codename}-security"
 
 # E-Mail-Adresse für Benachrichtigungen bei Fehlern (leer lassen für keine)
-unattended_mail: ""
+patch_management_unattended_mail: ""
 
 # Automatischen Neustart erlauben, falls ein Kernel-Update es erfordert (true/false)
-unattended_automatic_reboot: true
+patch_management_unattended_automatic_reboot: true
 
 # Uhrzeit für den automatischen Neustart (im Format "HH:MM", z. B. "03:00")
-unattended_automatic_reboot_time: "03:00"
+patch_management_unattended_automatic_reboot_time: "03:00"
