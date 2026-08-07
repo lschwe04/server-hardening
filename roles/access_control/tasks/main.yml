@@ -16,7 +16,7 @@
     - { regexp: '^#?MaxAuthTries', line: 'MaxAuthTries {{ ssh_max_auth_tries }}' }
     - { regexp: '^#?ClientAliveInterval', line: 'ClientAliveInterval {{ ssh_client_alive_interval }}' }
     - { regexp: '^#?ClientAliveCountMax', line: 'ClientAliveCountMax {{ ssh_client_alive_count_max }}' }
-    - { regexp: '^#?Port', line: 'Port {{ ssh_port }}' }
+    - { regexp: '^#?Port', line: 'Port {{ access_control_ssh_port }}' }
   notify: Restart SSH
 
 - name: Passwort-Richtlinien in /etc/login.defs anpassen
