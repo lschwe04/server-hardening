@@ -22,3 +22,5 @@
     - { name: 'net.ipv4.tcp_syncookies', value: '{{ kernel_tcp_syncookies }}' }
     - { name: 'kernel.dmesg_restrict', value: '{{ kernel_dmesg_restrict }}' }
     - { name: 'fs.suid_dumpable', value: '{{ kernel_suid_dumpable }}' }
+    - { name: 'net.ipv6.conf.all.disable_ipv6', value: '{{ kernel_disable_ipv6 }}' }
+    - { name: 'net.ipv6.conf.default.disable_ipv6', value: '{{ kernel_disable_ipv6 }}' }

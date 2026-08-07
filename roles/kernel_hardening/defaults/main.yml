@@ -16,3 +16,5 @@ kernel_dmesg_restrict: 1
 
 # Core Dumps für suid-Prozesse deaktivieren
 kernel_suid_dumpable: 0
+# IPv6 deaktivieren (CIS 3.1.1)
+kernel_disable_ipv6: 1

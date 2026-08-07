@@ -35,3 +35,33 @@
     owner: root
     group: root
     mode: '0644'
+- name: Berechtigungen für Cron-Dateien und Ordner strikt setzen (CIS 5.1.x)
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: '0700' # Für Ordner (oder 0600 für Dateien, Ansible file modul löst das bei Ordnern mit 0700 am besten)
+    state: "{{ 'directory' if not item.endswith('crontab') else 'file' }}"
+  loop:
+    - /etc/crontab
+    - /etc/cron.hourly
+    - /etc/cron.daily
+    - /etc/cron.weekly
+    - /etc/cron.monthly
+    - /etc/cron.d
+
+- name: Berechtigungen für GRUB-Bootloader-Konfiguration absichern (CIS 1.4.1)
+  ansible.builtin.file:
+    path: /boot/grub/grub.cfg
+    owner: root
+    group: root
+    mode: '0400'
+  ignore_errors: true # Falls der Pfad je nach Ubuntu-Version leicht abweicht (z.B. grub2)
+
+- name: Sichern des /tmp Verzeichnisses mit nodev, nosuid, noexec (CIS 1.1.2 - 1.1.4)
+  ansible.posix.mount:
+    path: /tmp
+    src: tmpfs
+    fstype: tmpfs
+    opts: defaults,rw,nosuid,nodev,noexec,relatime
+    state: mounted
