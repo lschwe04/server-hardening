@@ -52,7 +52,7 @@
       {% endif %}
     owner: root
     group: root
-    mode: '0640'
+    mode: "0640"
   notify: Restart Auditd
 
 - name: Auditd Dienst aktivieren und starten

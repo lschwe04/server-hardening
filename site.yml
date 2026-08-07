@@ -17,4 +17,3 @@
     - role: services_cleanup
     - role: file_integrity
     - role: banner
-

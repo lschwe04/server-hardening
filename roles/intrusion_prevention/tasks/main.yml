@@ -2,14 +2,14 @@
 # Aufgaben für Intrusion Prevention (Fail2ban)
 
 - name: Fail2ban installieren
-  apt:
+  ansible.builtin.apt:
     name: fail2ban
     state: present
-    update_cache: yes
+    update_cache: true
   when: ansible_os_family == "Debian"
 
 - name: Fail2ban lokale Jail-Konfiguration erstellen (jail.local)
-  copy:
+  ansible.builtin.copy:
     dest: /etc/fail2ban/jail.local
     content: |
       [DEFAULT]
@@ -24,11 +24,11 @@
       backend = %(sshd_backend)s
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   notify: Restart Fail2ban
 
 - name: Fail2ban Dienst aktivieren und starten
-  service:
+  ansible.builtin.service:
     name: fail2ban
     state: started
-    enabled: yes
+    enabled: true

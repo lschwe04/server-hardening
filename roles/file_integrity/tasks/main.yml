@@ -2,19 +2,19 @@
 # Aufgaben für File Integrity Monitoring (AIDE)
 
 - name: AIDE Paket auf Debian/Ubuntu installieren
-  apt:
+  ansible.builtin.apt:
     name: aide
     state: present
-    update_cache: yes
+    update_cache: true
   when: ansible_os_family == "Debian"
 
 - name: Prüfen ob AIDE-Datenbank bereits existiert
-  stat:
+  ansible.builtin.stat:
     path: /var/lib/aide/aide.db
   register: aide_db_file
 
 - name: AIDE-Datenbank initialisieren (Kann je nach System einige Minuten dauern)
-  command: aideinit
+  ansible.builtin.command: aideinit
   args:
     creates: /var/lib/aide/aide.db
   when: not aide_db_file.stat.exists and aide_init_on_install

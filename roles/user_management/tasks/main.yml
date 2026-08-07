@@ -2,28 +2,28 @@
 # Aufgaben für User Management und Passwort-Policies
 
 - name: Globale Passwort-Limits in /etc/login.defs anpassen (PASS_MAX_DAYS)
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/login.defs
-    regexp: '^PASS_MAX_DAYS'
-    line: 'PASS_MAX_DAYS   {{ pass_max_days }}'
+    regexp: "^PASS_MAX_DAYS"
+    line: "PASS_MAX_DAYS   {{ pass_max_days }}"
     state: present
 
 - name: Globale Passwort-Limits in /etc/login.defs anpassen (PASS_MIN_DAYS)
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/login.defs
-    regexp: '^PASS_MIN_DAYS'
-    line: 'PASS_MIN_DAYS   {{ pass_min_days }}'
+    regexp: "^PASS_MIN_DAYS"
+    line: "PASS_MIN_DAYS   {{ pass_min_days }}"
     state: present
 
 - name: Globale Passwort-Limits in /etc/login.defs anpassen (PASS_WARN_AGE)
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/login.defs
-    regexp: '^PASS_WARN_AGE'
-    line: 'PASS_WARN_AGE   {{ pass_warn_age }}'
+    regexp: "^PASS_WARN_AGE"
+    line: "PASS_WARN_AGE   {{ pass_warn_age }}"
     state: present
 
 - name: Inaktivitäts-Timeout (TMOUT) für alle Shell-Sessions global erzwingen
-  copy:
+  ansible.builtin.copy:
     dest: /etc/profile.d/autologout.sh
     content: |
       # Automatischen Logout nach 15 Minuten Inaktivität erzwingen
@@ -31,20 +31,20 @@
       export TMOUT
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 
 - name: Passwort-Komplexitäts-Modul (libpam-pwquality) auf Debian/Ubuntu installieren
-  apt:
+  ansible.builtin.apt:
     name: libpam-pwquality
     state: present
-    update_cache: yes
+    update_cache: true
   when: ansible_os_family == "Debian"
 
 - name: Mindestlänge für Passwörter über PAM pwquality erzwingen
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/security/pwquality.conf
-    regexp: '^#?minlen'
-    line: 'minlen = 12'
+    regexp: "^#?minlen"
+    line: "minlen = 12"
     state: present
 - name: Default-Inaktivitäts-Sperre für neue Benutzer setzen (CIS 5.5.1.4)
   ansible.builtin.command: useradd -D -f {{ inactive_lock_days }}
@@ -53,9 +53,9 @@
 - name: Sudo-Konfiguration härten (pty verwenden und externes Logfile) (CIS 5.3.4 & 5.3.5)
   ansible.builtin.lineinfile:
     path: /etc/sudoers
-    regexp: '^{{ item.regexp }}'
-    line: '{{ item.line }}'
-    validate: 'visudo -cf %s'
+    regexp: "^{{ item.regexp }}"
+    line: "{{ item.line }}"
+    validate: "visudo -cf %s"
   loop:
-    - { regexp: 'Defaults\s+use_pty', line: 'Defaults use_pty' }
-    - { regexp: 'Defaults\s+logfile=', line: 'Defaults logfile="/var/log/sudo.log"' }
+    - { regexp: "Defaults\\s+use_pty", line: "Defaults use_pty" }
+    - { regexp: "Defaults\\s+logfile=", line: 'Defaults logfile="/var/log/sudo.log"' }

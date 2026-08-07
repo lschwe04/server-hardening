@@ -13,7 +13,6 @@ access_control_ssh_client_alive_count_max: 2
 
 # Erlaubte Benutzer (leer lassen oder spezifischen Admin-User angeben, z. B. ['admin'])
 access_control_ssh_allowed_users: []
-
 # Passwörter / Login-Limits
 access_control_password_max_days: 90
 access_control_password_min_days: 7

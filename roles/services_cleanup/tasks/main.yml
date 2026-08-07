@@ -2,45 +2,45 @@
 # Aufgaben für Services Cleanup und Attack Surface Reduction
 
 - name: Ungenutzte und unsichere Pakete deinstallieren
-  apt:
+  ansible.builtin.apt:
     name: "{{ unwanted_packages }}"
     state: absent
-    purge: yes
+    purge: true
   when: ansible_os_family == "Debian"
 
 - name: Kritische Dateiberechtigungen für /etc/shadow setzen
-  file:
+  ansible.builtin.file:
     path: /etc/shadow
     owner: root
     group: root
-    mode: '0600'
+    mode: "0600"
 
 - name: Kritische Dateiberechtigungen für /etc/gshadow setzen
-  file:
+  ansible.builtin.file:
     path: /etc/gshadow
     owner: root
     group: root
-    mode: '0600'
+    mode: "0600"
 
 - name: Kritische Dateiberechtigungen für /etc/passwd setzen
-  file:
+  ansible.builtin.file:
     path: /etc/passwd
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 
 - name: Kritische Dateiberechtigungen für /etc/group setzen
-  file:
+  ansible.builtin.file:
     path: /etc/group
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 - name: Berechtigungen für Cron-Dateien und Ordner strikt setzen (CIS 5.1.x)
   ansible.builtin.file:
     path: "{{ item }}"
     owner: root
     group: root
-    mode: '0700' # Für Ordner (oder 0600 für Dateien, Ansible file modul löst das bei Ordnern mit 0700 am besten)
+    mode: "0700" # Für Ordner (oder 0600 für Dateien, Ansible file modul löst das bei Ordnern mit 0700 am besten)
     state: "{{ 'directory' if not item.endswith('crontab') else 'file' }}"
   loop:
     - /etc/crontab
@@ -55,7 +55,7 @@
     path: /boot/grub/grub.cfg
     owner: root
     group: root
-    mode: '0400'
+    mode: "0400"
   ignore_errors: true # Falls der Pfad je nach Ubuntu-Version leicht abweicht (z.B. grub2)
 
 - name: Sichern des /tmp Verzeichnisses mit nodev, nosuid, noexec (CIS 1.1.2 - 1.1.4)
