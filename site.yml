@@ -2,7 +2,7 @@
 # Zentrales Ansible Playbook für Linux Server Hardening
 
 - name: Server absichern und härten
-  hosts: servers
+  hosts: hardening_targets
   become: true
   gather_facts: true
 
@@ -20,4 +20,6 @@
     - role: apparmor
     - role: filesystem_hardening
     - role: chrony
-    - role: login_banner
+    - role: malware_scanner
+    - role: system_hardening
+

@@ -1,26 +1,19 @@
 ---
-# Aufgaben für Banner und Legal Notice
-
-- name: SSH-Login-Warnbanner (/etc/issue.net) erstellen
+- name: Lokales Login-Banner (/etc/issue) konfigurieren
   ansible.builtin.copy:
-    dest: /etc/issue.net
-    content: |
-      =================================================================
-      ACHTUNG: Unbefugter Zugriff auf dieses System ist strengstens verboten!
-      Alle Aktivitäten werden überwacht und protokolliert.
-      =================================================================
-    owner: root
-    group: root
-    mode: "0644"
-
-- name: Lokales Konsolen-Login-Banner (/etc/issue) erstellen
-  ansible.builtin.copy:
+    content: "{{ login_banner_text }}"
     dest: /etc/issue
-    content: |
-      System Hardened by Ansible - Authorized Users Only\n\n
     owner: root
     group: root
-    mode: "0644"
+    mode: '0644'
+
+- name: Remote Login-Banner (/etc/issue.net) konfigurieren
+  ansible.builtin.copy:
+    content: "{{ login_banner_text }}"
+    dest: /etc/issue.net
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: SSH-Dienst anweisen, das Banner zu verwenden (/etc/ssh/sshd_config)
   ansible.builtin.lineinfile:

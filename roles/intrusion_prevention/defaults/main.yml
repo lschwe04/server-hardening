@@ -5,3 +5,9 @@ intrusion_prevention_bantime: 3600 # Zeit in Sekunden, die eine IP gebannt wird 
 intrusion_prevention_findtime: 600 # Zeitfenster in Sekunden, in dem die Versuche gezählt werden (10 Minuten)
 intrusion_prevention_maxretry: 3 # Maximale Fehlversuche, bevor der Ban ausgelöst wird
 intrusion_prevention_ssh_port: 22 # Der zu überwachende SSH-Port
+
+# Damit der Task sie direkt findet:
+fail2ban_bantime: 3600
+fail2ban_findtime: 600
+fail2ban_maxretry: 3
+fail2ban_ssh_port: 22

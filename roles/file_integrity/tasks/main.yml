@@ -17,4 +17,4 @@
   ansible.builtin.command: aideinit
   args:
     creates: /var/lib/aide/aide.db
-  when: not aide_db_file.stat.exists and aide_init_on_install
+  when: not file_integrity_aide_db_file.stat.exists and file_integrity_aide_init_on_install

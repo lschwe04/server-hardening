@@ -1,0 +1,9 @@
+Unattended-Upgrade::Origins-Pattern {
+{% for pattern in unattended_origins_patterns %}
+        "{{ pattern }}";
+{% endfor %}
+};
+
+Unattended-Upgrade::Automatic-Reboot "{{ unattended_automatic_reboot | lower }}";
+Unattended-Upgrade::Automatic-Reboot-Time "{{ unattended_automatic_reboot_time }}";
+Unattended-Upgrade::Mail "{{ unattended_mail }}";

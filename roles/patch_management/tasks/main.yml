@@ -20,18 +20,8 @@
 
 - name: Erweiterte Konfiguration für Unattended-Upgrades anpassen (50unattended-upgrades)
   ansible.builtin.template:
-    # Alternativ als copy oder mit Parametern, hier als robuster Block:
+    src: 50unattended-upgrades.j2
     dest: /etc/apt/apt.conf.d/50unattended-upgrades
-    content: |
-      Unattended-Upgrade::Allowed-Origins {
-          "Ubuntu,archive=${distro_codename}-security";
-      };
-      Unattended-Upgrade::AutoFixInterruptedDpkg "true";
-      Unattended-Upgrade::MinimalSteps "true";
-      Unattended-Upgrade::InstallOnShutdown "false";
-      Unattended-Upgrade::Mail "{{ unattended_mail }}";
-      Unattended-Upgrade::Automatic-Reboot "{{ 'true' if unattended_automatic_reboot else 'false' }}";
-      Unattended-Upgrade::Automatic-Reboot-Time "{{ unattended_automatic_reboot_time }}";
     owner: root
     group: root
     mode: "0644"

@@ -10,3 +10,7 @@ services_cleanup_unwanted_packages:
   - nis
   - avahi-daemon
   - cups
+  - rsh-redone-client
+
+# Damit der Task sie direkt findet:
+unwanted_packages: "{{ services_cleanup_unwanted_packages }}"

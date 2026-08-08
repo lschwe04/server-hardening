@@ -3,10 +3,10 @@
 
 # Standard-Policies
 firewall_ufw_default_incoming: "deny"
-firewall_default_outgoing: "allow"
+firewall_ufw_default_outgoing: "allow"
 
 # Zu öffnende Ports
-firewall_allowed_ports:
+ufw_allowed_ports:
   - 22 # SSH
   - 80 # HTTP
   - 443 # HTTPS

@@ -1,0 +1,169 @@
+---
+# Aufgaben für erweiterte System-Härtung (basierend auf Lynis Vorschlägen)
+
+- name: Universe-Repository auf Ubuntu aktivieren
+  ansible.builtin.apt_repository:
+    repo: "deb http://archive.ubuntu.com/ubuntu {{ ansible_facts.distribution_release }} universe"
+    state: present
+  when: ansible_facts['distribution'] == "Ubuntu"
+
+- name: Empfohlene Sicherheitstools und Pakete installieren (inkl. acct)
+  ansible.builtin.apt:
+    name:
+      - libpam-tmpdir
+      - apt-listchanges
+      - debsums
+      - apt-show-versions
+      - acct
+    state: present
+    update_cache: true
+    lock_timeout: 60
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Prozess-Accounting (pacct) aktivieren und starten (ACCT-9622)
+  ansible.builtin.systemd:
+    name: pacct
+    state: started
+    enabled: true
+  ignore_errors: true
+
+- name: Postfix VRFY-Befehl deaktivieren (falls Postfix vorhanden)
+  ansible.builtin.lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: '^disable_vrfy_command'
+    line: 'disable_vrfy_command = yes'
+    create: false
+  notify: Restart postfix
+  ignore_errors: true
+
+- name: Umask in /etc/login.defs auf strengeren Wert (027) anpassen
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    regexp: '^UMASK\s+'
+    line: 'UMASK 027'
+
+- name: Passwort-Hashing-Runden (SHA512) in /etc/login.defs konfigurieren (AUTH-9230)
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    regexp: '^SHA_CRYPT_MIN_ROUNDS'
+    line: 'SHA_CRYPT_MIN_ROUNDS 10000'
+
+- name: SSH-Konfiguration weiter härten (AllowTcpForwarding, LogLevel, etc.)
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^{{ item.key }}\\s+"
+    line: "{{ item.key }} {{ item.value }}"
+  loop:
+    - { key: 'AllowTcpForwarding', value: 'no' }
+    - { key: 'LogLevel', value: 'VERBOSE' }
+    - { key: 'MaxSessions', value: '2' }
+    - { key: 'TCPKeepAlive', value: 'no' }
+    - { key: 'AllowAgentForwarding', value: 'no' }
+  notify: Restart ssh
+
+- name: Kernel-Parameter (Sysctl) für Härtung setzen (inkl. IP-Forwarding) (KRNL-6000 / NETW-3210)
+  ansible.builtin.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_set: true
+    state: present
+    reload: true
+  loop:
+    - { key: 'kernel.sysrq', value: '0' }
+    - { key: 'net.ipv4.conf.all.log_martians', value: '1' }
+    - { key: 'net.ipv4.conf.default.log_martians', value: '1' }
+    - { key: 'kernel.unprivileged_bpf_disabled', value: '2' }
+    - { key: 'net.core.bpf_jit_harden', value: '2' }
+    - { key: 'net.ipv4.ip_forward', value: '0' }
+    - { key: 'net.ipv6.conf.all.forwarding', value: '0' }
+
+- name: Unübliche Netzwerkprotokolle per Blacklist deaktivieren (NETW-3200)
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/uncommon-protocols.conf
+    content: |
+      install dccp /bin/true
+      install sctp /bin/true
+      install rds /bin/true
+      install tipc /bin/true
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Compiler-Zugriff für normale Benutzer einschränken (HRDN-7222)
+  ansible.builtin.file:
+    path: /usr/bin/x86_64-linux-gnu-as
+    mode: '0700'
+  when: ansible_os_family == "Debian"
+  ignore_errors: true
+
+- name: Globale Passwort-Ablaufzeiten in /etc/login.defs konfigurieren (AUTH-9282)
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  loop:
+    - { regexp: '^PASS_MAX_DAYS', line: 'PASS_MAX_DAYS   90' }
+    - { regexp: '^PASS_MIN_DAYS', line: 'PASS_MIN_DAYS   7' }
+    - { regexp: '^PASS_WARN_AGE', line: 'PASS_WARN_AGE   14' }
+
+- name: Automatische debsums-Prüfung per Cron aktivieren (PKGS-7370)
+  ansible.builtin.lineinfile:
+    path: /etc/default/debsums
+    regexp: '^CRON_CHECK='
+    line: 'CRON_CHECK=weekly'
+    create: true
+    mode: '0644'
+
+- name: UFW (Uncomplicated Firewall) installieren
+  ansible.builtin.apt:
+    name: ufw
+    state: present
+
+- name: UFW Standard-Richtlinien setzen (Incoming Deny, Outgoing Allow)
+  ansible.builtin.ufw:
+    direction: "{{ item.direction }}"
+    policy: "{{ item.policy }}"
+  loop:
+    - { direction: 'incoming', policy: 'deny' }
+    - { direction: 'outgoing', policy: 'allow' }
+
+- name: SSH-Zugriff in UFW explizit erlauben
+  ansible.builtin.ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: UFW aktivieren und beim Booten starten
+  ansible.builtin.ufw:
+    state: enabled
+
+- name: Prüfen, ob AIDE-Datenbank existiert
+  ansible.builtin.stat:
+    path: /var/lib/aide/aide.db
+  register: aide_db
+
+- name: AIDE-Datenbank initialisieren (falls noch nicht vorhanden)
+  ansible.builtin.command: aideinit
+  when: not aide_db.stat.exists
+  async: 300
+  poll: 10
+
+- name: Unattended-upgrades installieren und aktivieren (PKGS-7390)
+  ansible.builtin.apt:
+    name: unattended-upgrades
+    state: present
+
+- name: Automatische Updates in APT-Konfiguration aktivieren
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Core Dumps für alle Benutzer global deaktivieren (HRDN-7220)
+  ansible.builtin.lineinfile:
+    path: /etc/security/limits.conf
+    line: '* hard core 0'

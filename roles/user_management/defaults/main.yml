@@ -5,3 +5,9 @@ user_management_pass_max_days: 90 # Maximale Gültigkeit eines Passworts in Tage
 user_management_pass_min_days: 7 # Mindestanzahl an Tagen vor der nächsten Passwortänderung
 user_management_pass_warn_age: 14 # Warnung an den Benutzer X Tage vor Ablauf des Passworts
 user_management_inactive_lock_days: 30 # Account nach X Tagen Inaktivität automatisch sperren
+
+# Damit der Task sie direkt findet:
+pass_max_days: 90
+pass_min_days: 7
+pass_warn_age: 14
+inactive_lock_days: 30

@@ -1,0 +1,8 @@
+---
+# Globale Variablen für das gesamte Ansible-Projekt
+
+# Erzwingt die Nutzung von Python 3 auf dem Zielserver
+ansible_python_interpreter: /usr/bin/python3
+
+# Globale Standard-Sicherheitseinstellungen (optional erweiterbar)
+project_environment: "testing"
